@@ -2,6 +2,7 @@
 import BeautifulSoup as bs
 import email.parser
 import base64
+from datetime import datetime as dt
 from ..licitacao import Licitacao
 
 mail_domain = 'brlicita.com.br'
@@ -26,6 +27,7 @@ class Parser:
                 continue
 
             licitacao = Licitacao()
+            licitacao.tipo = mail_domain
             licitacao.comprador = html_licitacao.find('span').text
             licitacao.uf = html_licitacao.find("span", attrs={"style":"font-weight: 700; font-size: medium;"}).text
 
@@ -61,12 +63,16 @@ class Parser:
                     licitacao.objeto = self.extrai_valor(tipo)
                 elif tipo_text == "Segmento":
                     licitacao.segmento = self.extrai_valor(tipo)
-                elif tipo_text == "Abertura":
-                    licitacao.abertura = self.extrai_valor(tipo)
-#Informações
-#Código
+                elif tipo_text == u"Abertura":
+                    licitacao.cotacao_inicio = dt.strptime(self.extrai_valor(tipo), "%d/%m/%Y %H:%M")
+                elif tipo_text == u"Informações":
+                    licitacao.informacoes = self.extrai_valor(tipo)
+                elif tipo_text == u"Código":
+                    licitacao.codigo = self.extrai_valor(tipo)
+                elif tipo_text == u"Propostas":
+                    inicio, fim = " ".join(self.extrai_valor(tipo).splitlines()).split("a")
+                    licitacao.termino_envio_proposta = dt.strptime(fim.strip(), "%d/%m/%Y %H:%M")
 #Edital
-#Propostas
 #Complementos
 #Preço Edital
 
@@ -92,12 +98,4 @@ class Parser:
     #licitacao.termino_envio_proposta = datetime.strptime(data, '%d/%m/%Y %H:%M:%S')
     #licitacao.data_cotacao_inicio = datetime.strptime(inicio.strip(), '%d/%m/%Y %H:%M:%S')
     #licitacao.data_cotacao_fim = datetime.strptime(fim.strip(), '%d/%m/%Y %H:%M:%S')
-
-if __name__=="__main__":
-    filename = 'brlicita.eml'
-    parser = email.parser.Parser()
-    email = parser.parse(open(filename, 'r'))
-
-    for licitacao in Parser(email):
-        licitacao.imprime()
 
