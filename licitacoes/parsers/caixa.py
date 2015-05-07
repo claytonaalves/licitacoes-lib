@@ -35,7 +35,7 @@ class Parser:
         if 'Objeto' in line:
             licitacao.objeto = line.split(':')[1].strip()
         if u'Nº' in line:
-            licitacao.numero = line.split(' ')[1]
+            licitacao.codigo = line.split(' ')[1]
         if u'Término do Credenciamento' in line:
             data = line.split(':', 1)[1].strip()
             licitacao.termino_credenciamento = datetime.strptime(data, '%d/%m/%Y %H:%M:%S')
@@ -45,8 +45,8 @@ class Parser:
         if u'Intervalo de Cotação' in line:
             datas = line.split(':', 1)[1]
             inicio, fim = datas.split('a')
-            licitacao.data_cotacao_inicio = datetime.strptime(inicio.strip(), '%d/%m/%Y %H:%M:%S')
-            licitacao.data_cotacao_fim = datetime.strptime(fim.strip(), '%d/%m/%Y %H:%M:%S')
+            licitacao.cotacao_inicio = datetime.strptime(inicio.strip(), '%d/%m/%Y %H:%M:%S')
+            licitacao.cotacao_fim = datetime.strptime(fim.strip(), '%d/%m/%Y %H:%M:%S')
 
     def __iter__(self):
         return self.licitacoes.__iter__()
