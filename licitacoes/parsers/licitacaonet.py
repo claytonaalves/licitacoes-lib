@@ -1,22 +1,23 @@
 #coding: utf8
 import re
-from datetime import datetime
+from datetime import datetime as dt
+from ..licitacao import Licitacao
+import base64
 
 mail_domain = 'licitacao.net'
-
-class Licitacao:
-
-    site = ''
-
-    def __str__(self):
-        return "Numero: %s" % self.numero
 
 class Parser:
 
     endereco_re = re.compile(u"^Endereço \w+")
+    email_re = re.compile(u"^email", flags=re.I)
+    site_re = re.compile(u"^site", flags=re.I)
+    datas_re = re.compile(u"^data de entrega (.+) data de abertura: (.+)", flags=re.I)
 
     def __init__(self, email):
-        iterator = iter(email.read().decode('utf8').splitlines())
+        base64_encoded = email.get_payload()[0].get_payload()
+        email_body = base64.decodestring(str(base64_encoded))
+
+        iterator = iter(email_body.decode('utf8').splitlines())
 
         self.licitacoes = []
         for line in iterator:
@@ -31,30 +32,42 @@ class Parser:
 
     def extrai_licitacao(self, codigo, iterator):
         licitacao = Licitacao()
-        licitacao.numero = codigo.split()[1]
+        licitacao.tipo = mail_domain
+        licitacao.codigo = codigo.split()[1]
         for line in iterator:
+            #line = line or ''
             if u"Modalidade" in line:
                 licitacao.modalidade = self.extrai_valor(line)
+                licitacao.modalidade = re.sub('Edital: .+$', '', licitacao.modalidade).strip().title()
             elif u"Descrição" in line:
                 licitacao.objeto = self.extrai_objeto(line, iterator)
+                licitacao.objeto = re.sub('^\s*descri..o objeto\s*', '', licitacao.objeto, flags=re.I).capitalize()
             elif u"Licitante" in line:
-                licitacao.licitante = self.extrai_licitante(line, iterator)
+                licitacao.comprador = self.extrai_licitante(line, iterator).title()
             elif u"Contato" in line:
-                licitacao.contato = self.extrai_valor(line)
-            elif u"Data de Entrega" in line:
-                lista = line.split()
-                licitacao.data_entrega = datetime.strptime(" ".join(lista[3:5]), "%d/%m/%Y %H:%M")
-                licitacao.data_abertura = datetime.strptime(" ".join(lista[8:10]), "%d/%m/%Y %H:%M")
+                telefone = self.extrai_valor(line)
+                telefone = re.sub("^\s*-", "", telefone).strip()
+                telefone = re.sub("\s*-\s*$", "", telefone).strip()
+                licitacao.telefone = telefone
             elif self.endereco_re.match(line):
-                    licitacao.endereco = line.split(" ", 1)[1]
+                licitacao.endereco = line.split(" ", 1)[1].title()
+            elif self.email_re.match(line):
+                lista = line.split()
+                licitacao.email = lista[1].lower()
+                if len(lista)>3:
+                    licitacao.site = lista[3].lower()
             elif u"Bairro" in line:
                 licitacao.bairro = line.split(" ", 1)[1]
-            elif u"Site" in line:
+            elif self.site_re.match(line):
                 licitacao.site = line.split(" ", 1)[1].lower()
+            elif self.datas_re.match(line):
+                entrega, abertura = self.datas_re.match(line).groups()
+                licitacao.cotacao_inicio = dt.strptime(abertura, "%d/%m/%Y %H:%M")
+                licitacao.cotacao_fim = dt.strptime(entrega, "%d/%m/%Y %H:%M")
             elif u"Cidade" in line:
                 cidade, uf = line.split(" ", 1)[1].split("-")
-                licitacao.cidade = cidade
-                licitacao.uf = uf
+                licitacao.cidade = cidade.title()
+                licitacao.uf = uf.strip()
 
             if "voltar ao topo" in line.lower():
                 break
@@ -83,14 +96,3 @@ class Parser:
     def next(self):
         return self.licitacoes.next()
 
-
-if __name__=="__main__":
-    f = open("saida.txt", "r")
-    for l in Parser(f):
-        print l
-        print l.licitante
-        print l.data_entrega
-        print l.data_abertura
-        print l.site
-        print "======"
-    f.close()
