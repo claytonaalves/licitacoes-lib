@@ -65,7 +65,7 @@ class Parser:
                 licitacao.cotacao_inicio = dt.strptime(abertura, "%d/%m/%Y %H:%M")
                 licitacao.cotacao_fim = dt.strptime(entrega, "%d/%m/%Y %H:%M")
             elif u"Cidade" in line:
-                cidade, uf = line.split(" ", 1)[1].split("-")
+                cidade, uf = line.split(" ", 1)[1].rsplit("-", 1)
                 licitacao.cidade = cidade.title()
                 licitacao.uf = uf.strip()
 
