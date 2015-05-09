@@ -5,7 +5,35 @@ from ..licitacao import Licitacao
 
 mail_domain = 'caixa.gov.br'
 
+def extrai_valor(line):
+    lista = line.split(':', 1)
+
+    if len(lista)>1:
+        valor = lista[1].strip()
+    else:
+        valor = lista[0].strip()
+
+    return valor
+
+def extrai_data(line):
+    data_texto = extrai_valor(line)
+    try:
+        data = datetime.strptime(data_texto, '%d/%m/%Y')
+    except ValueError:
+        data = datetime.now()
+    return data
+
+def extrai_data_hora(line):
+    data_texto = extrai_valor(line)
+    try:
+        data = datetime.strptime(data_texto, '%d/%m/%Y %H:%M:%S')
+    except ValueError:
+        data = extrai_data(line)
+    return data
+
 class Parser:
+
+    intervalo_re = re.compile(u"Intervalo de cotação:* (.+) a (.+)", flags=re.I)
 
     def __init__(self, email):
         lines = email.get_payload().splitlines()
@@ -37,14 +65,11 @@ class Parser:
         if u'Nº' in line:
             licitacao.codigo = line.split(' ')[1]
         if u'Término do Credenciamento' in line:
-            data = line.split(':', 1)[1].strip()
-            licitacao.termino_credenciamento = datetime.strptime(data, '%d/%m/%Y %H:%M:%S')
+            licitacao.termino_credenciamento = extrai_data_hora(line)
         if u'Término do Envio de Proposta' in line:
-            data = line.split(':', 1)[1].strip()
-            licitacao.termino_envio_proposta = datetime.strptime(data, '%d/%m/%Y %H:%M:%S')
-        if u'Intervalo de Cotação' in line:
-            datas = line.split(':', 1)[1]
-            inicio, fim = datas.split('a')
+            licitacao.termino_envio_proposta = extrai_data_hora(line)
+        if self.intervalo_re.match(line):
+            inicio, fim = self.intervalo_re.match(line).groups()
             licitacao.cotacao_inicio = datetime.strptime(inicio.strip(), '%d/%m/%Y %H:%M:%S')
             licitacao.cotacao_fim = datetime.strptime(fim.strip(), '%d/%m/%Y %H:%M:%S')
 
