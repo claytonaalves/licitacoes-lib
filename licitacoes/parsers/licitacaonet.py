@@ -14,10 +14,12 @@ class Parser:
     datas_re = re.compile(u"^data de entrega (.+) data de abertura: (.+)", flags=re.I)
 
     def __init__(self, email):
-        base64_encoded = email.get_payload()[0].get_payload()
+        payload = email.get_payload()[0]
+        charset = payload.get_param('charset')
+        base64_encoded = payload.get_payload()
         email_body = base64.decodestring(str(base64_encoded))
 
-        iterator = iter(email_body.decode('utf8').splitlines())
+        iterator = iter(email_body.decode(charset).splitlines())
 
         self.licitacoes = []
         for line in iterator:
@@ -53,7 +55,8 @@ class Parser:
                 licitacao.endereco = line.split(" ", 1)[1].title()
             elif self.email_re.match(line):
                 lista = line.split()
-                licitacao.email = lista[1].lower()
+                if len(lista)>1:
+                    licitacao.email = lista[1].lower()
                 if len(lista)>3:
                     licitacao.site = lista[3].lower()
             elif u"Bairro" in line:
