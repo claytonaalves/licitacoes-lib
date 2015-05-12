@@ -34,6 +34,7 @@ def extrai_data_hora(line):
 class Parser:
 
     intervalo_re = re.compile(u"Intervalo de cotação:* (.+) a (.+)", flags=re.I)
+    codigo_re = re.compile(u"^\s*N. ")
 
     def __init__(self, email):
         lines = email.get_payload().splitlines()
@@ -62,7 +63,7 @@ class Parser:
             licitacao.modalidade = line.split(':')[1].strip()
         if 'Objeto' in line:
             licitacao.objeto = line.split(':')[1].strip()
-        if u'Nº' in line:
+        if self.codigo_re.match(line):
             licitacao.codigo = line.split(' ')[1]
         if u'Término do Credenciamento' in line:
             licitacao.termino_credenciamento = extrai_data_hora(line)
