@@ -43,7 +43,7 @@ class Parser:
                 licitacao.modalidade = re.sub('Edital: .+$', '', licitacao.modalidade).strip().title()
             elif u"Descrição" in line:
                 licitacao.objeto = self.extrai_objeto(line, iterator)
-                licitacao.objeto = re.sub('^\s*descri..o objeto\s*', '', licitacao.objeto, flags=re.I).capitalize()
+                licitacao.objeto = re.sub('^\s*descri..o objeto\s*(?i)', '', licitacao.objeto).capitalize()
             elif u"Licitante" in line:
                 licitacao.comprador = self.extrai_licitante(line, iterator).title()
             elif u"Contato" in line:
