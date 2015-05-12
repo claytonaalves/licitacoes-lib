@@ -1,0 +1,136 @@
+% setdefault('selected', {})
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Licitações</title>
+    <style>
+        .classe1 {
+            margin-top: 30px;
+        }
+
+        .classe1:hover {
+            background-color: #f0f0f0;
+        }
+
+        fieldset {
+            margin-top: 10px;
+            margin-bottom: 10px;
+        }
+
+        fieldset div {
+            margin-top: 10px;
+        }
+
+    </style>
+</head>
+<body>
+    <a href="/enviar">Enviar arquivo de email</a>    
+
+    <fieldset>
+        <form action="/" method="POST">
+        <label for="cidade">Cidade</label>
+        <select id="cidade" name="cidade">
+            <option value="todas">Todas</option>
+            %for cidade in cidades:
+            <option value="{{cidade.nome}}" {{!'selected' if cidade.nome==selected.get('cidade') else ''}}>{{cidade.nome}}</option>
+            %end
+        </select>
+
+        <label for="estado">Estado</label>
+        <select id="estado" name="estado">
+            <option value="todos">Todos</option>
+            %for estado in estados:
+            <option value="{{estado.uf}}">{{estado.uf}}</option>
+            %end
+        </select>
+
+        <label for="modalidade">Modalidade</label>
+        <select id="modalidade" name="modalidade">
+            <option value="todas">Todas</option>
+            %for modalidade in modalidades:
+            <option value="{{modalidade.descricao}}">{{modalidade.descricao}}</option>
+            %end
+        </select>
+
+        <div>
+            <label for="credenciamento_inicio">Início do credenciamento</label>
+            <input id="credenciamento_inicio" type="text" name="credenciamento_inicio">
+            <label for="credenciamento_fim">Fim do credenciamento</label>
+            <input id="credenciamento_fim" type="text" name="credenciamento_fim">
+        </div>
+
+        <div>
+            <label for="cotacao_inicio">Início da cotação</label>
+            <input id="cotacao_inicio" type="text" name="cotacao_inicio">
+            <label for="cotacao_fim">Fim da cotação</label>
+            <input id="cotacao_fim" type="text" name="cotacao_fim">
+        </div>
+
+        <div>
+            <label for="objeto">Objeto</label>
+            <input id="objeto" type="text" name="objeto" size="80">
+        </div>
+
+        <div>
+            <input type="submit" value="Filtrar">
+        </div>
+
+     </form>
+
+    </fieldset>
+
+<!--  -->
+
+    %for licitacao in licitacoes:
+    <div class="classe1">
+        <table>
+            <tr>
+                <td>Tipo</td>
+                <td>{{licitacao.tipo}}</td>
+            </tr>
+            <tr>
+                <td>Código</td>
+                <td>{{licitacao.codigo}}</td>
+            </tr>
+            <tr>
+                <td>Modalidade</td>
+                <td>{{licitacao.modalidade}}</td>
+            </tr>
+            <tr>
+                <td>Comprador</td>
+                <td>{{licitacao.comprador}}</td>
+            </tr>
+            <tr>
+                <td>Cidade</td>
+                <td>{{licitacao.cidade}}</td>
+            </tr>
+            <tr>
+                <td>Estado</td>
+                <td>{{licitacao.uf}}</td>
+            </tr>
+            <tr>
+                <td>Objeto</td>
+                <td>{{licitacao.objeto}}</td>
+            </tr>
+            <tr>
+                <td>Prazo credenciamento</td>
+                <td>{{licitacao.prazo_credenciamento or ''}}</td>
+            </tr>
+            <tr>
+                <td>Prazo proposta</td>
+                <td>{{formata_data(licitacao.prazo_proposta)}}</td>
+            </tr>
+            <tr>
+                <td>Início da cotação</td>
+                <td>{{formata_data(licitacao.cotacao_inicio)}}</td>
+            </tr>
+            <tr>
+                <td>Fim da cotação</td>
+                <td>{{formata_data(licitacao.cotacao_fim)}}</td>
+            </tr>
+        </table>
+    </div>
+    %end
+</body>
+</html>
