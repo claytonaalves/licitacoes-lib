@@ -11,7 +11,10 @@ def parser_factory(parsed_email):
     mail_from = parsed_email.get('from')
     parser = None
     for parser_module in parsers:
-        if parser_module.mail_domain in mail_from:
-            parser = parser_module.Parser(parsed_email)
+        try:
+            if parser_module.mail_domain in mail_from:
+                parser = parser_module.Parser(parsed_email)
+        except TypeError:
+            print parsed_email
     return parser
 
