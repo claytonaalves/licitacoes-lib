@@ -71,6 +71,8 @@ class Parser:
                     licitacao.codigo = self.extrai_valor(tipo)
                 elif tipo_text == u"Propostas":
                     inicio, fim = " ".join(self.extrai_valor(tipo).splitlines()).split("a")
+                    if not fim:
+                        continue 
                     licitacao.termino_envio_proposta = dt.strptime(fim.strip(), "%d/%m/%Y %H:%M")
 #Edital
 #Complementos
