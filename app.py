@@ -58,8 +58,14 @@ def index_with_filter():
                                 formata_data(credenciamento_inicio), 
                                 formata_data(credenciamento_fim)))
     if cotacao_inicio and cotacao_fim:
-        select = select.where(Licitacao.cotacao_inicio==formata_data(cotacao_inicio)) 
-        select = select.where(Licitacao.cotacao_fim==formata_data(cotacao_fim)) 
+        select = select.where(
+		(Licitacao.cotacao_inicio>=formata_data(cotacao_inicio)+' 00:00:00') &
+		(Licitacao.cotacao_fim<=formata_data(cotacao_fim)+' 23:59:59') 
+        )
+
+    select = select.limit(30)
+
+    print select
 
     return template('index.html', 
                     licitacoes=select,
