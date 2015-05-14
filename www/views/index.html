@@ -33,7 +33,7 @@
                     <select id="estado" name="estado" class="form-control">
                         <option value="todos">Todos</option>
                         %for estado in estados:
-                        <option value="{{estado.uf}}">{{estado.uf}}</option>
+                        <option value="{{estado.uf}}" {{!'selected' if estado.uf==selected.get('estado') else ''}}>{{estado.uf}}</option>
                         %end
                     </select>
                 </div>
@@ -43,7 +43,7 @@
                     <select id="modalidade" name="modalidade" class="form-control">
                         <option value="todas">Todas</option>
                         %for modalidade in modalidades:
-                        <option value="{{modalidade.descricao}}">{{modalidade.descricao}}</option>
+                        <option value="{{modalidade.descricao}}" {{!'selected' if modalidade.descricao==selected.get('modalidade') else ''}}>{{modalidade.descricao}}</option>
                         %end
                     </select>
                 </div>
