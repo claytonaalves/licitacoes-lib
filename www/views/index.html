@@ -105,6 +105,10 @@
                     <td>{{licitacao.comprador}}</td>
                 </tr>
                 <tr>
+                    <td>Endereço</td>
+                    <td>{{licitacao.endereco}}</td>
+                </tr>
+                <tr>
                     <td>Cidade</td>
                     <td>{{licitacao.cidade}}</td>
                 </tr>
@@ -131,6 +135,14 @@
                 <tr>
                     <td>Fim da cotação</td>
                     <td>{{formata_data(licitacao.cotacao_fim)}}</td>
+                </tr>
+                <tr>
+                    <td>E-mail</td>
+                    <td>{{licitacao.email}}</td>
+                </tr>
+                <tr>
+                    <td>Site</td>
+                    <td><a href="{{licitacao.site}}">{{licitacao.site}}</a></td>
                 </tr>
             </table>
         </div>
