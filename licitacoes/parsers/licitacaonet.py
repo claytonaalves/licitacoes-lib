@@ -12,6 +12,7 @@ class Parser:
     email_re = re.compile(u"^email", flags=re.I)
     site_re = re.compile(u"^site", flags=re.I)
     datas_re = re.compile(u"^data de entrega (.+) data de abertura: (.+)", flags=re.I)
+    arquivo_edital_re = re.compile(u"^Arquivo Edital")
 
     def __init__(self, email):
         payload = email.get_payload()[0]
@@ -65,8 +66,12 @@ class Parser:
                 licitacao.site = line.split(" ", 1)[1].lower()
             elif self.datas_re.match(line):
                 entrega, abertura = self.datas_re.match(line).groups()
-                licitacao.cotacao_inicio = dt.strptime(abertura, "%d/%m/%Y %H:%M")
-                licitacao.cotacao_fim = dt.strptime(entrega, "%d/%m/%Y %H:%M")
+                licitacao.prazo_credenciamento = dt.strptime(entrega, "%d/%m/%Y %H:%M")
+                licitacao.cotacao_inicio       = dt.strptime(abertura, "%d/%m/%Y %H:%M")
+            elif self.arquivo_edital_re.match(line):
+                idr = licitacao.codigo[1:2]
+                id = licitacao.codigo[2:]
+                licitacao.arquivo_edital = "http://www.licitacao.net/edital.asp?idR={0}&id={1}".format(idr, id)
             elif u"Cidade" in line:
                 cidade, uf = line.split(" ", 1)[1].rsplit("-", 1)
                 licitacao.cidade = cidade.title()
