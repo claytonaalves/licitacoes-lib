@@ -12,14 +12,19 @@ class Licitacao:
     tipo                   = u'Não informado' 
 
     codigo                 = ''
+    edital                 = ''
     segmento               = ''
     modalidade             = None
     objeto                 = None
-    termino_credenciamento = None
-    termino_envio_proposta = None
+
+    prazo_credenciamento   = None
+    prazo_proposta         = None
+
     cotacao_inicio         = None
     cotacao_fim            = None
+
     informacoes            = ''
+    arquivo_edital         = ''
     
     @property
     def identificacao(self):
