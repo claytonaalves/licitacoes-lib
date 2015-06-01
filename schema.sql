@@ -12,10 +12,13 @@ create table licitacoes (
     codigo varchar(20),
     modalidade varchar(30),
     objeto text,
-    informacoes varchar(150),
     segmento text,
     prazo_credenciamento datetime,
     prazo_proposta datetime,
     cotacao_inicio datetime,
-    cotacao_fim datetime
+    cotacao_fim datetime,
+    edital varchar(15),
+    arquivo_edital varchar(80),
+
+    informacoes varchar(150)
 );
