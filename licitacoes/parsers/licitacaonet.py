@@ -8,11 +8,12 @@ mail_domain = 'licitacao.net'
 
 class Parser:
 
-    endereco_re = re.compile(u"^Endereço \w+")
-    email_re = re.compile(u"^email", flags=re.I)
-    site_re = re.compile(u"^site", flags=re.I)
-    datas_re = re.compile(u"^data de entrega (.+) data de abertura: (.+)", flags=re.I)
+    endereco_re       = re.compile(u"^Endereço \w+")
+    email_re          = re.compile(u"^email", flags                                       = re.I)
+    site_re           = re.compile(u"^site", flags                                        = re.I)
+    datas_re          = re.compile(u"^data de entrega (.+) data de abertura: (.+)", flags = re.I)
     arquivo_edital_re = re.compile(u"^Arquivo Edital")
+    inf_adicionais_re = re.compile(u"^Informações Adicionais")
 
     def __init__(self, email):
         payload = email.get_payload()[0]
@@ -54,6 +55,8 @@ class Parser:
                 licitacao.telefone = telefone
             elif self.endereco_re.match(line):
                 licitacao.endereco = line.split(" ", 1)[1].title()
+            elif self.inf_adicionais_re.match(line):
+                licitacao.informacoes = self.extrai_informacoes_adicionais(line, iterator)
             elif self.email_re.match(line):
                 lista = line.split()
                 if len(lista)>1:
@@ -97,6 +100,15 @@ class Parser:
                 break
             linhas.append(linha.strip())
         return " ".join(linhas)
+
+    def extrai_informacoes_adicionais(self, line, iterator):
+        linhas = [line.split(" ", 2)[2].strip()]
+        for linha in iterator:
+            if not linha:
+                break
+            linhas.append(linha.strip())
+        return " ".join(linhas).title()
+
 
     def __iter__(self):
         return iter(self.licitacoes)
