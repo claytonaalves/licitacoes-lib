@@ -110,13 +110,16 @@ def do_upload():
         licitacao.modalidade = l.modalidade
         licitacao.informacoes = l.informacoes
         licitacao.segmento = l.segmento
-        licitacao.termino_credenciamento = l.termino_credenciamento
-        licitacao.termino_envio_proposta = l.termino_envio_proposta
+        licitacao.prazo_credenciamento = l.prazo_credenciamento
+        licitacao.prazo_proposta = l.prazo_proposta
         licitacao.cotacao_inicio = l.cotacao_inicio
         licitacao.cotacao_fim = l.cotacao_fim
+        licitacao.valor_estimado = l.valor_estimado
+        licitacao.edital = l.edital
+        licitacao.arquivo_edital = l.arquivo_edital
         licitacao.save()
-
 
     redirect('/')
 
 run(reloader=True)
+
