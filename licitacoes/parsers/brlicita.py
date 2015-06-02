@@ -2,6 +2,7 @@
 import BeautifulSoup as bs
 import email.parser
 import base64
+import re
 from datetime import datetime as dt
 from ..licitacao import Licitacao
 
@@ -74,6 +75,14 @@ class Parser:
                     if not fim:
                         continue 
                     licitacao.termino_envio_proposta = dt.strptime(fim.strip(), "%d/%m/%Y %H:%M")
+                elif tipo_text == u"Valor Estimado:":
+                    valor = self.extrai_valor(tipo)
+                    valor = re.sub("[rR]\$* *", "", valor)
+                    valor = valor.replace(".", "")
+                    valor = valor.replace(",", ".")
+                    licitacao.valor_estimado = float(valor)
+                elif tipo_text == u"Edital":
+                    licitacao.edital = self.extrai_valor(tipo)
 #Edital
 #Complementos
 #Preço Edital

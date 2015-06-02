@@ -17,8 +17,10 @@ create table licitacoes (
     prazo_proposta datetime,
     cotacao_inicio datetime,
     cotacao_fim datetime,
-    edital varchar(15),
+    edital varchar(80),
     arquivo_edital varchar(80),
+
+    valor_estimado numeric(15, 2),
 
     informacoes varchar(150)
 );

@@ -25,6 +25,8 @@ class Licitacao:
 
     informacoes            = ''
     arquivo_edital         = ''
+
+    valor_estimado         = 0
     
     @property
     def identificacao(self):
