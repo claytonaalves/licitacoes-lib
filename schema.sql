@@ -1,3 +1,5 @@
+drop table licitacoes;
+
 create table licitacoes (
     identificacao varchar(40) primary key,
     tipo varchar(20),
@@ -22,5 +24,7 @@ create table licitacoes (
 
     valor_estimado numeric(15, 2),
 
-    informacoes varchar(150)
-);
+    informacoes varchar(150),
+
+    FULLTEXT(objeto)
+) engine=MyISAM;

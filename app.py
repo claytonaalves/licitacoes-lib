@@ -33,43 +33,22 @@ def css_files(filename):
 
 @route('/', method='POST')
 def index_with_filter():
-    cidade = request.forms.get('cidade')
-    estado = request.forms.get('estado')
-    modalidade = request.forms.get('modalidade')
-    credenciamento_inicio = request.forms.get('credenciamento_inicio')
-    credenciamento_fim = request.forms.get('credenciamento_fim')
-    cotacao_inicio = request.forms.get('cotacao_inicio')
-    cotacao_fim = request.forms.get('cotacao_fim')
-    objeto = request.forms.get('objeto')
+    select = Licitacao.filtrar_por(
+        cidade                = request.forms.get('cidade'),
+        estado                = request.forms.get('estado'),
+        modalidade            = request.forms.get('modalidade'),
+        credenciamento_inicio = request.forms.get('credenciamento_inicio'),
+        credenciamento_fim    = request.forms.get('credenciamento_fim'),
+        cotacao_inicio        = request.forms.get('cotacao_inicio'),
+        cotacao_fim           = request.forms.get('cotacao_fim'),
+        objeto                = request.forms.get('objeto')
+    )
 
     selected_items = {
-        'cidade': cidade,
-        'estado': estado,
-        'modalidade': modalidade
+        'cidade': request.forms.get('cidade'),
+        'estado': request.forms.get('estado'),
+        'modalidade': request.forms.get('modalidade')
     }
-
-    select = Licitacao.select()
-    if objeto:
-        select = select.where(Licitacao.objeto.contains(objeto))
-    if cidade!='todas':
-        select = select.where(Licitacao.cidade==cidade)
-    if estado!='todos':
-        select = select.where(Licitacao.uf==estado)
-    if modalidade!='todas':
-        select = select.where(Licitacao.modalidade==modalidade)
-    if credenciamento_inicio and credenciamento_fim:
-        select = select.where(Licitacao.prazo_credenciamento.between(
-                                formata_data(credenciamento_inicio), 
-                                formata_data(credenciamento_fim)))
-    if cotacao_inicio and cotacao_fim:
-        select = select.where(
-		(Licitacao.cotacao_inicio>=formata_data(cotacao_inicio)+' 00:00:00') &
-		(Licitacao.cotacao_fim<=formata_data(cotacao_fim)+' 23:59:59') 
-        )
-
-    select = select.limit(30)
-
-    print select
 
     return template('index.html', 
                     licitacoes=select,
