@@ -51,23 +51,19 @@
         
             <div class="row">
                 <div class="col-md-4">
-                    <label for="credenciamento_inicio">Início do credenciamento</label>
+                    <label for="credenciamento_inicio">Data de Entrega</label>
                     <input id="credenciamento_inicio" type="text" name="credenciamento_inicio" class="form-control">
                 </div>
                 <div class="col-md-4">
-                    <label for="credenciamento_fim">Fim do credenciamento</label>
+                    <label for="credenciamento_fim">Data de Abertura</label>
                     <input id="credenciamento_fim" type="text" name="credenciamento_fim" class="form-control">
                 </div>
             </div>
         
             <div class="row">
                 <div class="col-md-4">
-                    <label for="cotacao_inicio">Início da cotação</label>
+                    <label for="cotacao_inicio">Término da proposta CAIXA</label>
                     <input id="cotacao_inicio" type="text" name="cotacao_inicio" class="form-control">
-                </div>
-                <div class="col-md-4">
-                    <label for="cotacao_fim">Fim da cotação</label>
-                    <input id="cotacao_fim" type="text" name="cotacao_fim" class="form-control">
                 </div>
             </div>
         
@@ -121,20 +117,16 @@
                     <td>{{licitacao.objeto}}</td>
                 </tr>
                 <tr>
-                    <th>Início do credenciamento</th>
+                    <th>Data de Entrega</th>
                     <td>{{licitacao.prazo_credenciamento or ''}}</td>
                 </tr>
                 <tr>
-                    <th>Fim do credenciamento</th>
+                    <th>Data de Abertura</th>
                     <td>{{formata_data(licitacao.prazo_proposta)}}</td>
                 </tr>
                 <tr>
-                    <th>Início da cotação</th>
+                    <th>Término da proposta CAIXA</th>
                     <td>{{formata_data(licitacao.cotacao_inicio)}}</td>
-                </tr>
-                <tr>
-                    <th>Fim da cotação</th>
-                    <td>{{formata_data(licitacao.cotacao_fim)}}</td>
                 </tr>
                 <tr>
                     <th>E-mail</th>
