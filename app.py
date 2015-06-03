@@ -23,10 +23,6 @@ def index():
                     formata_data=data_filter)
 
 
-def formata_data(data):
-    dia, mes, ano = data.split('/')
-    return "%s-%s-%s" % (ano, mes, dia)
-
 @route('/css/<filename>')
 def css_files(filename):
     return bottle.static_file(filename, root='www/css')
