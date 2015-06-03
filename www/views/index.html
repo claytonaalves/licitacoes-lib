@@ -19,21 +19,21 @@
         
             <div class="row">
                 <div class="col-md-4">
-                    <label for="cidade">Cidade</label>
-                    <select id="cidade" name="cidade" class="form-control">
-                        <option value="todas">Todas</option>
-                        %for cidade in cidades:
-                        <option value="{{cidade.nome}}" {{!'selected' if cidade.nome==selected.get('cidade') else ''}}>{{cidade.nome}}</option>
-                        %end
-                    </select>
-                </div>
-                
-                <div class="col-md-4">
                     <label for="estado">Estado</label>
                     <select id="estado" name="estado" class="form-control">
                         <option value="todos">Todos</option>
                         %for estado in estados:
                         <option value="{{estado.uf}}" {{!'selected' if estado.uf==selected.get('estado') else ''}}>{{estado.uf}}</option>
+                        %end
+                    </select>
+                </div>
+                
+                <div class="col-md-4">
+                    <label for="cidade">Cidade</label>
+                    <select id="cidade" name="cidade" class="form-control">
+                        <option value="todas">Todas</option>
+                        %for cidade in cidades:
+                        <option value="{{cidade.nome}}" {{!'selected' if cidade.nome==selected.get('cidade') else ''}}>{{cidade.nome}}</option>
                         %end
                     </select>
                 </div>
@@ -89,60 +89,68 @@
         <div class="classe1">
             <table>
                 <tr>
-                    <td>Tipo</td>
+                    <th>Tipo</th>
                     <td>{{licitacao.tipo}}</td>
                 </tr>
                 <tr>
-                    <td>Código</td>
+                    <th>Código</th>
                     <td>{{licitacao.codigo}}</td>
                 </tr>
                 <tr>
-                    <td>Modalidade</td>
+                    <th>Modalidade</th>
                     <td>{{licitacao.modalidade}}</td>
                 </tr>
                 <tr>
-                    <td>Comprador</td>
+                    <th>Comprador</th>
                     <td>{{licitacao.comprador}}</td>
                 </tr>
                 <tr>
-                    <td>Endereço</td>
+                    <th>Endereço</th>
                     <td>{{licitacao.endereco}}</td>
                 </tr>
                 <tr>
-                    <td>Cidade</td>
+                    <th>Cidade</th>
                     <td>{{licitacao.cidade}}</td>
                 </tr>
                 <tr>
-                    <td>Estado</td>
+                    <th>Estado</th>
                     <td>{{licitacao.uf}}</td>
                 </tr>
                 <tr>
-                    <td>Objeto</td>
+                    <th>Objeto</th>
                     <td>{{licitacao.objeto}}</td>
                 </tr>
                 <tr>
-                    <td>Prazo credenciamento</td>
+                    <th>Início do credenciamento</th>
                     <td>{{licitacao.prazo_credenciamento or ''}}</td>
                 </tr>
                 <tr>
-                    <td>Prazo proposta</td>
+                    <th>Fim do credenciamento</th>
                     <td>{{formata_data(licitacao.prazo_proposta)}}</td>
                 </tr>
                 <tr>
-                    <td>Início da cotação</td>
+                    <th>Início da cotação</th>
                     <td>{{formata_data(licitacao.cotacao_inicio)}}</td>
                 </tr>
                 <tr>
-                    <td>Fim da cotação</td>
+                    <th>Fim da cotação</th>
                     <td>{{formata_data(licitacao.cotacao_fim)}}</td>
                 </tr>
                 <tr>
-                    <td>E-mail</td>
+                    <th>E-mail</th>
                     <td>{{licitacao.email}}</td>
                 </tr>
                 <tr>
-                    <td>Site</td>
+                    <th>Site</th>
                     <td><a href="{{licitacao.site}}">{{licitacao.site}}</a></td>
+                </tr>
+                <tr>
+                    <th>Arquivo Edital</th>
+                    <td>{{licitacao.arquivo_edital}}</td>
+                </tr>
+                <tr>
+                    <th>Valor Estimado</th>
+                    <td>{{licitacao.valor_estimado}}</td>
                 </tr>
             </table>
         </div>

@@ -49,3 +49,12 @@ label {
 fieldset {
     margin-bottom: 30px;
 }
+
+table th {
+    width: 200px;
+    background-color: #fcfcfc;
+}
+
+td {
+    padding-left: 10px;
+}
