@@ -19,6 +19,7 @@ fieldset div {
     text-align: right;
     position: absolute;
     right: 30px;
+    top: 7px;
 }
 
 label {
