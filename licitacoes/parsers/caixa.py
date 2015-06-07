@@ -68,10 +68,10 @@ class Parser:
         if u'Término do Credenciamento' in line:
             licitacao.data_entrega = extrai_data_hora(line)
         if u'Término do Envio de Proposta' in line:
-            licitacao.data_abertura = extrai_data_hora(line)
+            licitacao.termino_proposta = extrai_data_hora(line)
         if self.intervalo_re.match(line):
             inicio, fim = self.intervalo_re.match(line).groups()
-            licitacao.cotacao_inicio = datetime.strptime(inicio.strip(), '%d/%m/%Y %H:%M:%S')
+            licitacao.data_abertura = datetime.strptime(inicio.strip(), '%d/%m/%Y %H:%M:%S')
             licitacao.cotacao_fim = datetime.strptime(fim.strip(), '%d/%m/%Y %H:%M:%S')
 
     def __iter__(self):
