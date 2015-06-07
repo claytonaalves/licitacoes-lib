@@ -30,14 +30,14 @@ def css_files(filename):
 @route('/', method='POST')
 def index_with_filter():
     select = Licitacao.filtrar_por(
-        cidade         = request.forms.get('cidade'),
-        estado         = request.forms.get('estado'),
-        modalidade     = request.forms.get('modalidade'),
-        data_entrega   = request.forms.get('data_entrega'),
-        data_abertura  = request.forms.get('data_abertura'),
-        cotacao_inicio = request.forms.get('cotacao_inicio'),
-        cotacao_fim    = request.forms.get('cotacao_fim'),
-        objeto         = request.forms.get('objeto')
+        cidade           = request.forms.get('cidade'),
+        estado           = request.forms.get('estado'),
+        modalidade       = request.forms.get('modalidade'),
+        data_entrega     = request.forms.get('data_entrega'),
+        data_abertura    = request.forms.get('data_abertura'),
+        termino_proposta = request.forms.get('termino_proposta'),
+        cotacao_fim      = request.forms.get('cotacao_fim'),
+        objeto           = request.forms.get('objeto')
     )
 
     selected_items = {
@@ -85,9 +85,9 @@ def do_upload():
         licitacao.modalidade = l.modalidade
         licitacao.informacoes = l.informacoes
         licitacao.segmento = l.segmento
-        licitacao.prazo_credenciamento = l.prazo_credenciamento
-        licitacao.prazo_proposta = l.prazo_proposta
-        licitacao.cotacao_inicio = l.cotacao_inicio
+        licitacao.data_entrega = l.data_entrega
+        licitacao.data_abertura = l.data_abertura
+        licitacao.termino_proposta = l.termino_proposta
         licitacao.cotacao_fim = l.cotacao_fim
         licitacao.valor_estimado = l.valor_estimado
         licitacao.edital = l.edital

@@ -18,7 +18,7 @@ create table licitacoes (
 
     data_entrega datetime,
     data_abertura datetime,
-    cotacao_inicio datetime,
+    termino_proposta datetime,
     cotacao_fim datetime,
 
     edital varchar(80),

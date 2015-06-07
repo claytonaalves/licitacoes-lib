@@ -69,8 +69,8 @@ class Parser:
                 licitacao.site = line.split(" ", 1)[1].lower()
             elif self.datas_re.match(line):
                 entrega, abertura = self.datas_re.match(line).groups()
-                licitacao.data_entrega   = dt.strptime(entrega, "%d/%m/%Y %H:%M")
-                licitacao.cotacao_inicio = dt.strptime(abertura, "%d/%m/%Y %H:%M")
+                licitacao.data_entrega     = dt.strptime(entrega, "%d/%m/%Y %H:%M")
+                licitacao.termino_proposta = dt.strptime(abertura, "%d/%m/%Y %H:%M")
             elif self.arquivo_edital_re.match(line):
                 idr = licitacao.codigo[1:2]
                 id = licitacao.codigo[2:]

@@ -17,10 +17,10 @@ class Licitacao:
     modalidade             = None
     objeto                 = None
 
-    prazo_credenciamento   = None
-    prazo_proposta         = None
+    data_entrega           = None
+    data_abertura          = None
 
-    cotacao_inicio         = None
+    termino_proposta       = None
     cotacao_fim            = None
 
     informacoes            = ''

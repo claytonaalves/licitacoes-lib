@@ -51,10 +51,10 @@ class Licitacao(BaseModel):
     telefone             = CharField(null = True)
     tipo                 = CharField(null = True)
     uf                   = CharField(null = True)
-    prazo_credenciamento = DateTimeField(null = True)
-    prazo_proposta       = DateTimeField(null = True)
+    data_entrega         = DateTimeField(null = True)
+    data_abertura        = DateTimeField(null = True)
     cotacao_fim          = DateTimeField(null = True)
-    cotacao_inicio       = DateTimeField(null = True)
+    termino_proposta     = DateTimeField(null = True)
     informacoes          = CharField(null = True)
     arquivo_edital       = CharField(max_length=80)
     valor_estimado       = DecimalField()
@@ -76,9 +76,9 @@ class Licitacao(BaseModel):
             data1 = formata_data(kwargs['data_abertura'])+' 00:00:00'
             data2 = formata_data(kwargs['data_abertura'])+' 23:59:59'
             select = select.where(Licitacao.data_abertura.between(data1, data2)) 
-        if kwargs['cotacao_inicio'] and kwargs['cotacao_fim']:
+        if kwargs['termino_proposta'] and kwargs['cotacao_fim']:
             select = select.where(
-            (Licitacao.cotacao_inicio>=formata_data(kwargs['cotacao_inicio'])+' 00:00:00') &
+            (Licitacao.termino_proposta>=formata_data(kwargs['termino_proposta'])+' 00:00:00') &
             (Licitacao.cotacao_fim<=formata_data(kwargs['cotacao_fim'])+' 23:59:59') 
             )
         if kwargs['objeto']:

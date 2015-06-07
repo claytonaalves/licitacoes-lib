@@ -62,8 +62,8 @@
         
             <div class="row">
                 <div class="col-md-4">
-                    <label for="cotacao_inicio">Término da proposta CAIXA</label>
-                    <input id="cotacao_inicio" type="text" name="cotacao_inicio" class="form-control">
+                    <label for="termino_proposta">Término da proposta CAIXA</label>
+                    <input id="termino_proposta" type="text" name="termino_proposta" class="form-control">
                 </div>
             </div>
         
@@ -122,11 +122,11 @@
                 </tr>
                 <tr>
                     <th>Data de Abertura</th>
-                    <td>{{formata_data(licitacao.prazo_proposta)}}</td>
+                    <td>{{formata_data(licitacao.data_abertura)}}</td>
                 </tr>
                 <tr>
                     <th>Término da proposta CAIXA</th>
-                    <td>{{formata_data(licitacao.cotacao_inicio)}}</td>
+                    <td>{{formata_data(licitacao.termino_proposta)}}</td>
                 </tr>
                 <tr>
                     <th>E-mail</th>
