@@ -62,7 +62,7 @@ class Parser:
         if 'Modalidade' in line:
             licitacao.modalidade = line.split(':')[1].strip()
         if 'Objeto' in line:
-            licitacao.objeto = line.split(':')[1].strip()
+            licitacao.objeto = line.split(':')[1].strip().capitalize()
         if self.edital_re.match(line):
             licitacao.edital = self.edital_re.match(line).group(1)
         if u'Término do Credenciamento' in line:
