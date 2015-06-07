@@ -70,7 +70,8 @@
             <div class="row">
                 <div class="col-md-8">
                     <label for="objeto">Objeto</label>
-                    <input id="objeto" type="text" name="objeto" size="80" class="form-control">
+                    <input id="objeto" type="text" name="objeto" size="80" class="form-control"
+                     value="{{selected.get('objeto') or ''}}">
                 </div>
                 <div class="col-md-4">
                     <button type="submit" class="btn btn-primary form-control">Filtrar</button>
@@ -91,6 +92,10 @@
                 <tr>
                     <th>Código</th>
                     <td>{{licitacao.codigo}}</td>
+                </tr>
+                <tr>
+                    <th>Edital</th>
+                    <td>{{licitacao.edital}}</td>
                 </tr>
                 <tr>
                     <th>Modalidade</th>

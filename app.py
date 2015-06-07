@@ -40,10 +40,11 @@ def index_with_filter():
         objeto           = request.forms.get('objeto')
     )
 
-    selected_items = {
-        'cidade': request.forms.get('cidade'),
+    filter_options = {
+        'cidade': request.forms.get('cidade').decode('utf8'),
         'estado': request.forms.get('estado'),
-        'modalidade': request.forms.get('modalidade')
+        'modalidade': request.forms.get('modalidade').decode('utf8'),
+        'objeto': request.forms.get('objeto').decode('utf8')
     }
 
     return template('index.html', 
@@ -51,7 +52,7 @@ def index_with_filter():
                     cidades=carrega_cidades(),
                     estados=carrega_estados(),
                     modalidades=carrega_modalidades(),
-                    selected=selected_items,
+                    selected=filter_options,
                     formata_data=data_filter)
 
 
