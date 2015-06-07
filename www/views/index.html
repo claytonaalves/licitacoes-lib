@@ -51,12 +51,12 @@
         
             <div class="row">
                 <div class="col-md-4">
-                    <label for="credenciamento_inicio">Data de Entrega</label>
-                    <input id="credenciamento_inicio" type="text" name="credenciamento_inicio" class="form-control">
+                    <label for="data_entrega">Data de Entrega</label>
+                    <input id="data_entrega" type="text" name="data_entrega" class="form-control">
                 </div>
                 <div class="col-md-4">
-                    <label for="credenciamento_fim">Data de Abertura</label>
-                    <input id="credenciamento_fim" type="text" name="credenciamento_fim" class="form-control">
+                    <label for="data_abertura">Data de Abertura</label>
+                    <input id="data_abertura" type="text" name="data_abertura" class="form-control">
                 </div>
             </div>
         
@@ -118,7 +118,7 @@
                 </tr>
                 <tr>
                     <th>Data de Entrega</th>
-                    <td>{{formata_data(licitacao.prazo_credenciamento) or ''}}</td>
+                    <td>{{formata_data(licitacao.data_entrega) or ''}}</td>
                 </tr>
                 <tr>
                     <th>Data de Abertura</th>

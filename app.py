@@ -30,14 +30,14 @@ def css_files(filename):
 @route('/', method='POST')
 def index_with_filter():
     select = Licitacao.filtrar_por(
-        cidade                = request.forms.get('cidade'),
-        estado                = request.forms.get('estado'),
-        modalidade            = request.forms.get('modalidade'),
-        credenciamento_inicio = request.forms.get('credenciamento_inicio'),
-        credenciamento_fim    = request.forms.get('credenciamento_fim'),
-        cotacao_inicio        = request.forms.get('cotacao_inicio'),
-        cotacao_fim           = request.forms.get('cotacao_fim'),
-        objeto                = request.forms.get('objeto')
+        cidade         = request.forms.get('cidade'),
+        estado         = request.forms.get('estado'),
+        modalidade     = request.forms.get('modalidade'),
+        data_entrega   = request.forms.get('data_entrega'),
+        data_abertura  = request.forms.get('data_abertura'),
+        cotacao_inicio = request.forms.get('cotacao_inicio'),
+        cotacao_fim    = request.forms.get('cotacao_fim'),
+        objeto         = request.forms.get('objeto')
     )
 
     selected_items = {

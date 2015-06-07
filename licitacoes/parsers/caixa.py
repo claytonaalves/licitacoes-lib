@@ -66,9 +66,9 @@ class Parser:
         if self.edital_re.match(line):
             licitacao.edital = self.edital_re.match(line).group(1)
         if u'Término do Credenciamento' in line:
-            licitacao.prazo_credenciamento = extrai_data_hora(line)
+            licitacao.data_entrega = extrai_data_hora(line)
         if u'Término do Envio de Proposta' in line:
-            licitacao.prazo_proposta = extrai_data_hora(line)
+            licitacao.data_abertura = extrai_data_hora(line)
         if self.intervalo_re.match(line):
             inicio, fim = self.intervalo_re.match(line).groups()
             licitacao.cotacao_inicio = datetime.strptime(inicio.strip(), '%d/%m/%Y %H:%M:%S')

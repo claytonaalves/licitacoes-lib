@@ -15,10 +15,12 @@ create table licitacoes (
     modalidade varchar(30),
     objeto text,
     segmento text,
-    prazo_credenciamento datetime,
-    prazo_proposta datetime,
+
+    data_entrega datetime,
+    data_abertura datetime,
     cotacao_inicio datetime,
     cotacao_fim datetime,
+
     edital varchar(80),
     arquivo_edital varchar(80),
 

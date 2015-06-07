@@ -68,14 +68,14 @@ class Licitacao(BaseModel):
             select = select.where(Licitacao.uf==kwargs['estado'])
         if kwargs['modalidade']!='todas':
             select = select.where(Licitacao.modalidade==kwargs['modalidade'])
-        if kwargs['credenciamento_inicio']:
-            data1 = formata_data(kwargs['credenciamento_inicio'])+' 00:00:00'
-            data2 = formata_data(kwargs['credenciamento_inicio'])+' 23:59:59'
-            select = select.where(Licitacao.prazo_credenciamento.between(data1, data2)) 
-        if kwargs['credenciamento_fim']:
-            data1 = formata_data(kwargs['credenciamento_fim'])+' 00:00:00'
-            data2 = formata_data(kwargs['credenciamento_fim'])+' 23:59:59'
-            select = select.where(Licitacao.prazo_proposta.between(data1, data2)) 
+        if kwargs['data_entrega']:
+            data1 = formata_data(kwargs['data_entrega'])+' 00:00:00'
+            data2 = formata_data(kwargs['data_entrega'])+' 23:59:59'
+            select = select.where(Licitacao.data_entrega.between(data1, data2)) 
+        if kwargs['data_abertura']:
+            data1 = formata_data(kwargs['data_abertura'])+' 00:00:00'
+            data2 = formata_data(kwargs['data_abertura'])+' 23:59:59'
+            select = select.where(Licitacao.data_abertura.between(data1, data2)) 
         if kwargs['cotacao_inicio'] and kwargs['cotacao_fim']:
             select = select.where(
             (Licitacao.cotacao_inicio>=formata_data(kwargs['cotacao_inicio'])+' 00:00:00') &
