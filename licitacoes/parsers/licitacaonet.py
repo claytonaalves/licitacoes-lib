@@ -104,7 +104,10 @@ class Parser:
         return " ".join(linhas)
 
     def extrai_informacoes_adicionais(self, line, iterator):
-        linhas = [line.split(" ", 2)[2].strip()]
+        try:
+            linhas = [line.split(" ", 2)[2].strip()]
+        except IndexError:
+            return ""
         for linha in iterator:
             if not linha:
                 break
