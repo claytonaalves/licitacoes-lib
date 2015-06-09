@@ -33,7 +33,7 @@ class Licitacao:
         sha1 = hashlib.sha1()
         sha1.update(self.comprador.encode('utf8'))
         sha1.update(self.codigo)
-        sha1.update(self.edital)
+        sha1.update(self.edital.encode('utf8'))
         sha1.update(self.tipo)
         return sha1.hexdigest()
 
