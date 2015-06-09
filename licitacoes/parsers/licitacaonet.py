@@ -9,11 +9,12 @@ mail_domain = 'licitacao.net'
 class Parser:
 
     endereco_re       = re.compile(u"^Endereço \w+")
-    email_re          = re.compile(u"^email", flags                                       = re.I)
-    site_re           = re.compile(u"^site", flags                                        = re.I)
-    datas_re          = re.compile(u"^data de entrega (.+) data de abertura: (.+)", flags = re.I)
+    email_re          = re.compile(u"^email", flags=re.I)
+    site_re           = re.compile(u"^site", flags=re.I)
+    datas_re          = re.compile(u"^data de entrega (.+) data de abertura: (.+)", flags=re.I)
     arquivo_edital_re = re.compile(u"^Arquivo Edital")
     inf_adicionais_re = re.compile(u"^Informações Adicionais")
+    edital_re         = re.compile(u".+ Edital: (.+)", flags=re.I)
 
     def __init__(self, email):
         payload = email.get_payload()[0]
@@ -39,10 +40,11 @@ class Parser:
         licitacao.tipo = mail_domain
         licitacao.codigo = codigo.split()[1]
         for line in iterator:
-            #line = line or ''
             if u"Modalidade" in line:
                 licitacao.modalidade = self.extrai_valor(line)
                 licitacao.modalidade = re.sub('Edital: .+$', '', licitacao.modalidade).strip().title()
+            if self.edital_re.match(line):
+                licitacao.edital = self.edital_re.match(line).group(1)
             elif u"Descrição" in line:
                 licitacao.objeto = self.extrai_objeto(line, iterator)
                 licitacao.objeto = re.sub('^\s*descri..o objeto\s*(?i)', '', licitacao.objeto).capitalize()
@@ -69,8 +71,8 @@ class Parser:
                 licitacao.site = line.split(" ", 1)[1].lower()
             elif self.datas_re.match(line):
                 entrega, abertura = self.datas_re.match(line).groups()
-                licitacao.data_entrega     = dt.strptime(entrega, "%d/%m/%Y %H:%M")
-                licitacao.termino_proposta = dt.strptime(abertura, "%d/%m/%Y %H:%M")
+                licitacao.data_entrega  = dt.strptime(entrega, "%d/%m/%Y %H:%M")
+                licitacao.data_abertura = dt.strptime(abertura, "%d/%m/%Y %H:%M")
             elif self.arquivo_edital_re.match(line):
                 idr = licitacao.codigo[1:2]
                 id = licitacao.codigo[2:]
