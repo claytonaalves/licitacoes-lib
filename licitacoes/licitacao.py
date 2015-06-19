@@ -12,6 +12,7 @@ class Licitacao:
     tipo                   = u'Não informado' 
 
     codigo                 = ''
+    codigo_uasg            = ''
     edital                 = ''
     segmento               = ''
     modalidade             = None

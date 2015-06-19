@@ -8,14 +8,6 @@ mail_domain = 'licitacao.net'
 
 class Parser:
 
-    endereco_re       = re.compile(u"^Endereço \w+")
-    email_re          = re.compile(u"^email", flags=re.I)
-    site_re           = re.compile(u"^site", flags=re.I)
-    datas_re          = re.compile(u"^data de entrega (.+) data de abertura: (.+)", flags=re.I)
-    arquivo_edital_re = re.compile(u"^Arquivo Edital")
-    inf_adicionais_re = re.compile(u"^Informações Adicionais")
-    edital_re         = re.compile(u".+ Edital: (.+)", flags=re.I)
-
     def __init__(self, email):
         payload = email.get_payload()[0]
         charset = payload.get_param('charset')
@@ -32,92 +24,124 @@ class Parser:
             if line==u"Súmulas":
                 break
 
+    def extrai_licitacao(self, linha, iterator):
+        licitacao = Licitacao()
+        licitacao.tipo = mail_domain
+        licitacao.codigo = linha.split()[1]
+
+        for linha in iterator:
+            for padrao, funcao in self.padroes:
+                match = padrao.search(linha)
+                if match:
+                    funcao(self, linha, padrao, iterator, licitacao)
+
+            if "voltar ao topo" in linha.lower():
+                break
+        return licitacao
+
     def extrai_valor(self, line):
         return line.split(" ", 1)[1]
 
-    def extrai_licitacao(self, codigo, iterator):
-        licitacao = Licitacao()
-        licitacao.tipo = mail_domain
-        licitacao.codigo = codigo.split()[1]
-        for line in iterator:
-            if u"Modalidade" in line:
-                licitacao.modalidade = self.extrai_valor(line)
-                licitacao.modalidade = re.sub('Edital: .+$', '', licitacao.modalidade).strip().title()
-            if self.edital_re.match(line):
-                licitacao.edital = self.edital_re.match(line).group(1)
-            elif u"Descrição" in line:
-                licitacao.objeto = self.extrai_objeto(line, iterator)
-                licitacao.objeto = re.sub('^\s*descri..o objeto\s*(?i)', '', licitacao.objeto).capitalize()
-            elif u"Licitante" in line:
-                licitacao.comprador = self.extrai_licitante(line, iterator).title()
-            elif u"Contato" in line:
-                telefone = self.extrai_valor(line)
-                telefone = re.sub("^\s*-", "", telefone).strip()
-                telefone = re.sub("\s*-\s*$", "", telefone).strip()
-                licitacao.telefone = telefone
-            elif self.endereco_re.match(line):
-                licitacao.endereco = line.split(" ", 1)[1].title()
-            elif self.inf_adicionais_re.match(line):
-                licitacao.informacoes = self.extrai_informacoes_adicionais(line, iterator)
-            elif self.email_re.match(line):
-                lista = line.split()
-                if len(lista)>1:
-                    licitacao.email = lista[1].lower()
-                if len(lista)>3:
-                    licitacao.site = lista[3].lower()
-            elif u"Bairro" in line:
-                licitacao.bairro = line.split(" ", 1)[1]
-            elif self.site_re.match(line):
-                licitacao.site = line.split(" ", 1)[1].lower()
-            elif self.datas_re.match(line):
-                entrega, abertura = self.datas_re.match(line).groups()
-                licitacao.data_entrega  = dt.strptime(entrega, "%d/%m/%Y %H:%M")
-                licitacao.data_abertura = dt.strptime(abertura, "%d/%m/%Y %H:%M")
-            elif self.arquivo_edital_re.match(line):
-                idr = licitacao.codigo[1:2]
-                id = licitacao.codigo[2:]
-                licitacao.arquivo_edital = "http://www.licitacao.net/edital.asp?idR={0}&id={1}".format(idr, id)
-            elif u"Cidade" in line:
-                cidade, uf = line.split(" ", 1)[1].rsplit("-", 1)
-                licitacao.cidade = cidade.title()
-                licitacao.uf = uf.strip()
-
-            if "voltar ao topo" in line.lower():
-                break
-        return licitacao
-    
-    def extrai_objeto(self, line, iterator):
+    def extrai_objeto(self, linha, regexp, iterator, licitacao):
         linhas_descricao = []
-        linhas_descricao.append(line.strip())
+        linhas_descricao.append(linha.strip())
         for l in iterator:
             if not l:
                 break
             linhas_descricao.append(l.strip())
-        return " ".join(linhas_descricao)
+        objeto = " ".join(linhas_descricao).capitalize()
+        licitacao.objeto = re.sub('^\s*descri..o objeto\s*(?i)', '', objeto)
 
-    def extrai_licitante(self, line, iterator):
-        linhas = [line.split(" ", 1)[1].strip()]
+    def extrai_modalidade_e_edital(self, linha, regexp, iterator, licitacao):
+        valor = self.extrai_valor(linha)
+        licitacao.modalidade = re.sub('Edital: .+$', '', valor).strip().title()
+
+        match = re.search(u'.+ Edital: (.+)', linha, flags=re.I)
+        if match:
+            licitacao.edital = match.group(1)
+
+    def extrai_datas(self, linha, regexp, iterator, licitacao):
+        entrega, abertura = regexp.match(linha).groups()
+        licitacao.data_entrega  = dt.strptime(entrega, "%d/%m/%Y %H:%M")
+        licitacao.data_abertura = dt.strptime(abertura, "%d/%m/%Y %H:%M")
+
+    def extrai_comprador(self, linha, regexp, iterator, licitacao):
+        linhas = [linha.split(" ", 1)[1].strip()]
         for linha in iterator:
             if not linha:
                 break
             linhas.append(linha.strip())
-        return " ".join(linhas)
+        licitacao.comprador = " ".join(linhas).title()
 
-    def extrai_informacoes_adicionais(self, line, iterator):
+    def extrai_contato(self, linha, regexp, iterator, licitacao):
+        regexp_uasg = re.compile(u'UASG: (\d{5,})', flags=re.I)
+        match = regexp_uasg.search(linha)
+        if match:
+            licitacao.codigo_uasg = match.group(1)
+            linha = regexp_uasg.sub('', linha)
+        telefone = regexp.sub('', linha)
+        telefone = re.sub('^\s*-', '', telefone)
+        telefone = re.sub('\s*-\s*$', '', telefone)
+        telefone = re.sub('\(0xx\d{2}\)$', '', telefone)
+        telefone = re.sub('\s*-\s*$', '', telefone)
+        telefone = re.sub('(?i)0xx', '0', telefone)
+        licitacao.telefone = telefone.strip()
+
+    def extrai_endereco(self, linha, regexp, iterator, licitacao):
+        licitacao.endereco = linha.split(" ", 1)[1].title()
+
+    def extrai_bairro(self, linha, regexp, iterator, licitacao):
+        licitacao.bairro = linha.split(" ", 1)[1]
+
+    def extrai_cidade(self, linha, regexp, iterator, licitacao):
+        cidade, uf = linha.split(" ", 1)[1].rsplit("-", 1)
+        licitacao.cidade = cidade.title()
+        licitacao.uf = uf.strip()
+
+    def extrai_email(self, linha, regexp, iterator, licitacao):
+        lista = linha.split()
+        if len(lista) > 1:
+            licitacao.email = lista[1].lower()
+        if len(lista) > 3:
+            licitacao.site = lista[3].lower()
+
+    def extrai_informacoes_adicionais(self, linha, regexp, iterator, licitacao):
         try:
-            linhas = [line.split(" ", 2)[2].strip()]
+            linhas = [linha.split(" ", 2)[2].strip()]
         except IndexError:
             return ""
         for linha in iterator:
             if not linha:
                 break
             linhas.append(linha.strip())
-        return " ".join(linhas).title()
+        licitacao.informacoes = " ".join(linhas).title()
 
+    def extrai_site(self, linha, regexp, iterator, licitacao):
+        licitacao.site = linha.split(" ", 1)[1].lower()
+
+    def extrai_arquivo_edital(self, linha, regexp, iterator, licitacao):
+        idr = licitacao.codigo[1:2]
+        id = licitacao.codigo[2:]
+        licitacao.arquivo_edital = "http://www.licitacao.net/edital.asp?idR={0}&id={1}".format(idr, id)
 
     def __iter__(self):
         return iter(self.licitacoes)
 
     def next(self):
         return self.licitacoes.next()
+
+    padroes = [
+        [re.compile(u'^Descrição', flags=re.I), extrai_objeto],
+        [re.compile(u'^Modalidade', flags=re.I), extrai_modalidade_e_edital],
+        [re.compile(u'^data de entrega (.+) data de abertura: (.+)', flags=re.I), extrai_datas],
+        [re.compile(u'^Licitante', flags=re.I), extrai_comprador],
+        [re.compile(u'^Contato', flags=re.I), extrai_contato],
+        [re.compile(u"^Endereço \w+"), extrai_endereco],
+        [re.compile(u"^Bairro \w+"), extrai_bairro],
+        [re.compile(u"^Cidade \w+"), extrai_cidade],
+        [re.compile(u"^email", flags=re.I), extrai_email],
+        [re.compile(u"^Informações Adicionais"), extrai_informacoes_adicionais],
+        [re.compile(u"^site", flags=re.I), extrai_site],
+        [re.compile(u'^Arquivo Edital'), extrai_arquivo_edital],
+    ]
 

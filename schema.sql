@@ -12,6 +12,7 @@ create table licitacoes (
     site varchar(180),
 
     codigo varchar(20),
+    codigo_uasg varchar(6),
     modalidade varchar(30),
     objeto text,
     segmento text,
