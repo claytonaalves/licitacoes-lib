@@ -1,4 +1,4 @@
-drop table licitacoes;
+-- drop table licitacoes;
 
 create table licitacoes (
     identificacao varchar(40) primary key,

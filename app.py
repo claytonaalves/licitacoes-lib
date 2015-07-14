@@ -93,6 +93,7 @@ def do_upload():
         licitacao.valor_estimado = l.valor_estimado
         licitacao.edital = l.edital
         licitacao.arquivo_edital = l.arquivo_edital
+        licitacao.codigo_uasg = l.codigo_uasg
         licitacao.save()
 
     redirect('/')

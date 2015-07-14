@@ -58,6 +58,7 @@ class Licitacao(BaseModel):
     informacoes          = CharField(null = True)
     arquivo_edital       = CharField(max_length=80)
     valor_estimado       = DecimalField()
+    codigo_uasg          = CharField(null = True)
 
     @staticmethod
     def filtrar_por(**kwargs):
