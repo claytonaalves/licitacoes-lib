@@ -2,8 +2,9 @@
 from . import brlicita
 from . import caixa
 from . import licitacaonet
+from . import comprasnet
 
-parsers = [brlicita, caixa, licitacaonet]
+parsers = [brlicita, caixa, licitacaonet, comprasnet]
 
 def parser_factory(parsed_email):
     """ Retorna um iterator de acordo com o domínio do email
