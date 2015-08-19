@@ -75,8 +75,12 @@ class Parser:
         licitacao.comprador = u', '.join(linhas)
 
     # Pregao Eletronico = modalidade
+    # Num. Edital
     def extrai_linha_modalidade(self, line, match, iterator, licitacao):
         licitacao.modalidade = match.group(0)
+        match = re.search('N. (\d+/\d+)', line.decode('utf8'))
+        if match:
+            licitacao.edital = match.group(1)
 
     # OBJETO = OBJETO
     def extrai_objeto(self, line, match, iterator, licitacao):
