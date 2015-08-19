@@ -1,6 +1,6 @@
 import bottle
 import email.parser
-from bottle import route, run, template, request, redirect
+from bottle import route, run, template, request, redirect, auth_basic
 from models import *
 from licitacoes import parser_factory
 from datetime import datetime as dt
@@ -13,7 +13,12 @@ def data_filter(data):
         return ''
     return data.strftime("%d/%m/%Y %H:%M:%S")
 
+def authenticate_user(username, password):
+    return (username=='teste' and password=='1234')
+
+
 @route('/', method='GET')
+@auth_basic(authenticate_user)
 def index():
     return template('index.html', 
                     licitacoes=Licitacao.select().limit(20),
@@ -21,7 +26,6 @@ def index():
                     estados=carrega_estados(),
                     modalidades=carrega_modalidades(),
                     formata_data=data_filter)
-
 
 @route('/css/<filename>')
 def css_files(filename):
