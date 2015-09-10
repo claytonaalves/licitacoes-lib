@@ -1,7 +1,8 @@
 from peewee import *
 from peewee import RawQuery
 
-database = MySQLDatabase('licitacoes', **{'user': 'root'})
+from settings import database
+
 
 def formata_data(data):
     dia, mes, ano = data.split('/')
@@ -72,16 +73,15 @@ class Licitacao(BaseModel):
         if kwargs['data_entrega']:
             data1 = formata_data(kwargs['data_entrega'])+' 00:00:00'
             data2 = formata_data(kwargs['data_entrega'])+' 23:59:59'
-            select = select.where(Licitacao.data_entrega.between(data1, data2)) 
+            select = select.where(Licitacao.data_entrega.between(data1, data2))
         if kwargs['data_abertura']:
             data1 = formata_data(kwargs['data_abertura'])+' 00:00:00'
             data2 = formata_data(kwargs['data_abertura'])+' 23:59:59'
-            select = select.where(Licitacao.data_abertura.between(data1, data2)) 
+            select = select.where(Licitacao.data_abertura.between(data1, data2))
         if kwargs['termino_proposta'] and kwargs['cotacao_fim']:
             select = select.where(
             (Licitacao.termino_proposta>=formata_data(kwargs['termino_proposta'])+' 00:00:00') &
-            (Licitacao.cotacao_fim<=formata_data(kwargs['cotacao_fim'])+' 23:59:59') 
-            )
+            (Licitacao.cotacao_fim<=formata_data(kwargs['cotacao_fim'])+' 23:59:59'))
         if kwargs['objeto']:
             select = select.where(SQL("match (objeto) against ('{0}')".format(kwargs['objeto'])))
 
@@ -89,3 +89,6 @@ class Licitacao(BaseModel):
         print select
         return select
 
+if __name__ == '__main__':
+    database.connect()
+    database.create_tables([Cidade, Estado, Licitacao, Modalidade])
