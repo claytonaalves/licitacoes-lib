@@ -1,9 +1,10 @@
+
 import bottle
 import email.parser
-from bottle import route, run, template, request, redirect, auth_basic
+
+from bottle import route, default_app, template, request, redirect, auth_basic
 from models import *
 from licitacoes import parser_factory
-from datetime import datetime as dt
 
 bottle.TEMPLATE_PATH.append('www/views')
 bottle.debug(True)
@@ -102,5 +103,4 @@ def do_upload():
 
     redirect('/')
 
-run(reloader=True)
-
+app = default_app()
